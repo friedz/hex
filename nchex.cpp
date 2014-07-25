@@ -5,6 +5,7 @@
 #include"stein.h"
 #include"feld.h"
 #include<algorithm>
+#include<unistd.h>
 
 
 using namespace std;
@@ -157,7 +158,7 @@ bool cmdOptionExists(char** begin, char** end, const string& option){
 
 int main(int argc, char* argv[]){
 
-	//printf("%c]0;%s%c", '\033', "nchex", '\007');
+	printf("%c]0;%s%c", '\033', "nchex", '\007');
 
 	int size = 10;
 	int uX = 5;
@@ -180,10 +181,10 @@ int main(int argc, char* argv[]){
 	curs_set(0);
 
 	/*
-	 if (can_change_color()) {
+	if (can_change_color()) {
 	 mvprintw(30, 5, "Yes you can");
-	 }
-	 */
+	}
+	*/
 
 	fmake(ur, f);
 	refresh();
@@ -210,7 +211,6 @@ int main(int argc, char* argv[]){
 				case KEY_UP:
 				case 'k':
 				case 'w':
-					//redraw(ur, f);
 					fmake(ur, f);
 					moveCursor(-1, 0, position, ur, f);
 					break;
@@ -218,7 +218,6 @@ int main(int argc, char* argv[]){
 				case KEY_DOWN:
 				case 'j':
 				case 's':
-					//redraw(ur, f);
 					fmake(ur, f);
 					moveCursor(1, 0, position, ur, f);
 					break;
@@ -226,7 +225,6 @@ int main(int argc, char* argv[]){
 				case KEY_LEFT:
 				case 'h':
 				case 'a':
-					//redraw(ur, f);
 					fmake(ur, f);
 					moveCursor(0, -1, position, ur, f);
 					break;
@@ -234,13 +232,11 @@ int main(int argc, char* argv[]){
 				case KEY_RIGHT:
 				case 'l':
 				case 'd':
-					//redraw(ur, f);
 					fmake(ur, f);
 					moveCursor(0, 1, position, ur, f);
 					break;
 
 				case ' ':
-					//redraw(ur, f);
 					fmake(ur, f);
 					m = turn(position, p, f);
 					if (m){
@@ -252,7 +248,6 @@ int main(int argc, char* argv[]){
 		}
 		curs_set(0);
 		move(ur.first, ur.second);
-		//fmake(ur, f);
 		redraw(ur, f);
 		//refresh();
 
