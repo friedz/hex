@@ -6,5 +6,7 @@ nchex: nchex.cpp stein.cpp feld.cpp
 	g++ -o nchex nchex.cpp stein.cpp feld.cpp -lncurses -Wall  -Wformat -Wextra
 
 hex: hex.cpp stein.cpp feld.cpp
-	g++ -o hex hex.cpp stein.cpp feld.cpp -lncurses -Wall
+	g++ -o hex hex.cpp stein.cpp feld.cpp ai.cpp -lncurses -Wall
 
+nop: hex.cpp stein.cpp feld.cpp ai.cpp
+	g++ -O0 -g3 -o hexai hex.cpp stein.cpp feld.cpp ai.cpp

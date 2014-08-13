@@ -2,6 +2,7 @@
 #include"stein.h"
 #include"feld.h"
 #include<string>
+#include"ai.h"
 
 using namespace std;
 
@@ -56,9 +57,11 @@ player nextTurn(player p){
 			cout << "\"X\" ";
 			break;
 		case playerTwo:
-			p =playerOne;
+			p = playerOne;
 			cout << "\"@\" ";
 			break;
+		default:
+			p = playerOne;
 	}
 	cout << "ist am zug" << endl;
 
@@ -67,12 +70,22 @@ player nextTurn(player p){
 
 int main(){
 	feld f;
+	ai bolle = ai(&f, playerTwo);
 	player winner = empty;
 	f.print();
 	player p = playerOne;
 	cout << "Player: \"@\" ist am zug" << endl;
 	while (winner == empty){
-		input(p, f);
+		switch(p) {
+			case playerOne:
+				input(p, f);
+				break;
+
+			case playerTwo:
+				bolle.turn();
+				break;
+		}
+			
 		f.print();
 		if (f.pruefe(p)){
 			winner = p;
