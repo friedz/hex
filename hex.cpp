@@ -2,7 +2,7 @@
 #include"stein.h"
 #include"feld.h"
 #include<string>
-#include"ai.h"
+#include"wybe.h"
 
 using namespace std;
 
@@ -70,7 +70,7 @@ player nextTurn(player p){
 
 int main(){
 	feld f;
-	ai bolle = ai(&f, playerTwo);
+	wybe bolle = wybe(&f, playerTwo);
 	player winner = empty;
 	f.print();
 	player p = playerOne;

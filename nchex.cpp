@@ -4,6 +4,7 @@
 #include<string>
 #include"stein.h"
 #include"feld.h"
+#include"wybe.h"
 #include<algorithm>
 #include<unistd.h>
 
@@ -156,7 +157,21 @@ bool cmdOptionExists(char** begin, char** end, const string& option){
 	return find(begin, end, option) != end;
 }
 
-int main(int argc, char* argv[]){
+bool isAi(player p, bool * ai) {
+	switch(p) {
+		case playerOne:
+			return ai[0];
+			break;
+		case playerTwo:
+			return ai[1];
+			break;
+		default:
+			return false;
+	}
+}
+
+
+int main(int argc, char* argv[]) {
 
 	printf("%c]0;%s%c", '\033', "nchex", '\007');
 
@@ -164,15 +179,26 @@ int main(int argc, char* argv[]){
 	int uX = 5;
 	int uY = 4;
 	pair<int, int> ur = make_pair(uY + 2, uX + 2);
+	bool ai[] = {false, true};
 
+	
 	if(cmdOptionExists(argv, argv+argc, "-n")){
 		size = atoi(getCmdOption(argv, argv + argc, "-n"));
+	} if(cmdOptionExists(argv, argv+argc, "-ki1")){
+		ai[0] = true;
+	} if(cmdOptionExists(argv, argv+argc, "-ki2")){
+		ai[1] = true;
+	} if(cmdOptionExists(argv, argv+argc, "-p1")){
+		ai[0] = false;
+	} if(cmdOptionExists(argv, argv+argc, "-p2")){
+		ai[1] = false;
 	}
 
 	feld f = feld(size);
 	player winner = empty;
 	player p = playerOne;
 	char player;
+
 
 	initscr();
 	noecho();
@@ -182,72 +208,89 @@ int main(int argc, char* argv[]){
 
 	/*
 	if (can_change_color()) {
-	 mvprintw(30, 5, "Yes you can");
+	 mvprintw(30, 5, "Yes you can do Colors");
 	}
 	*/
 
 	fmake(ur, f);
 	refresh();
 
-	while (winner == empty){
+	wybe box1 = wybe(&f, playerOne);
+	wybe box2 = wybe(&f, playerTwo);
+
+	while (winner == empty) {
 		player = playerChar(p);
 		mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 2, "Spieler %c ist am Zug", player);
 		refresh();
 
-		//if p interaktiv
-
-		move(ur.first, ur.second);
-		pair<int, int> position = make_pair(0, 0);
-		bool m = false;
-		int ch;
-		while (!m){
-			int a, b;
-			getyx(stdscr, a, b);
-			mvprintw(1, 4, "X: %d  Y: %d  ", position.first, position.second);
-			move(a, b);
-			curs_set(1);
-			ch = getch();
-			switch(ch){
-				case KEY_UP:
-				case 'k':
-				case 'w':
-					fmake(ur, f);
-					moveCursor(-1, 0, position, ur, f);
+		/* wenn der grade setzende spieler
+		 * die KI ist */
+		if(isAi(p, ai)) {
+			switch(p) {
+				case playerOne:
+					box1.turn();
 					break;
-
-				case KEY_DOWN:
-				case 'j':
-				case 's':
-					fmake(ur, f);
-					moveCursor(1, 0, position, ur, f);
+				case playerTwo:
+					box2.turn();
 					break;
-
-				case KEY_LEFT:
-				case 'h':
-				case 'a':
-					fmake(ur, f);
-					moveCursor(0, -1, position, ur, f);
-					break;
-
-				case KEY_RIGHT:
-				case 'l':
-				case 'd':
-					fmake(ur, f);
-					moveCursor(0, 1, position, ur, f);
-					break;
-
-				case ' ':
-					fmake(ur, f);
-					m = turn(position, p, f);
-					if (m){
-						addch(player | A_BOLD);
-					}
-					break;
+				default:
+					box2.turn();
 			}
-			refresh();
+		} else {
+
+			move(ur.first, ur.second);
+			pair<int, int> position = make_pair(0, 0);
+			bool m = false;
+			int ch;
+			while (!m){
+				int a, b;
+				getyx(stdscr, a, b);
+				mvprintw(1, 4, "X: %d  Y: %d  ", position.first, position.second);
+				move(a, b);
+				curs_set(1);
+				ch = getch();
+				switch(ch){
+					case KEY_UP:
+					case 'k':
+					case 'w':
+						fmake(ur, f);
+						moveCursor(-1, 0, position, ur, f);
+						break;
+
+					case KEY_DOWN:
+					case 'j':
+					case 's':
+						fmake(ur, f);
+						moveCursor(1, 0, position, ur, f);
+						break;
+
+					case KEY_LEFT:
+					case 'h':
+					case 'a':
+						fmake(ur, f);
+						moveCursor(0, -1, position, ur, f);
+						break;
+
+					case KEY_RIGHT:
+					case 'l':
+					case 'd':
+						fmake(ur, f);
+						moveCursor(0, 1, position, ur, f);
+						break;
+
+					case ' ':
+						fmake(ur, f);
+						m = turn(position, p, f);
+						if (m){
+							addch(player | A_BOLD);
+						}
+						break;
+				}
+				refresh();
+			}
+			curs_set(0);
+			move(ur.first, ur.second);
 		}
-		curs_set(0);
-		move(ur.first, ur.second);
 		redraw(ur, f);
 		//refresh();
 
