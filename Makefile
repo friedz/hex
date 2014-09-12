@@ -8,5 +8,5 @@ nchex: nchex.cpp stein.cpp feld.cpp wybe.cpp
 hex: hex.cpp stein.cpp feld.cpp
 	g++ -o hex hex.cpp stein.cpp feld.cpp wybe.cpp -Wall -Wformat -Wextra
 
-nop: hex.cpp stein.cpp feld.cpp wybe.cpp
-	g++ -O0 -g3 -o hexai hex.cpp stein.cpp feld.cpp wybe.cpp
+debug: hex.cpp stein.cpp feld.cpp wybe.cpp
+	g++ -O0 -g3 -o dehex hex.cpp stein.cpp feld.cpp wybe.cpp

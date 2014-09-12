@@ -84,6 +84,9 @@ int main(){
 			case playerTwo:
 				bolle.turn();
 				break;
+
+			default:
+				input(p, f);
 		}
 			
 		f.print();
@@ -102,6 +105,8 @@ int main(){
 		case playerTwo:
 			cout << "X ";
 			break;
+		default:
+			cout << "Niemand";
 	}
 	cout << "hat Gewonnen" << endl;
 

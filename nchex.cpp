@@ -34,25 +34,37 @@ void fmake(pair<int, int> ur, feld feld){
 	int size = feld.getSize();
 	int urY = ur.first - 2;
 	int urX = ur.second - 4;
+	attron(0 | COLOR_PAIR(playerOne));
 	for(int i = 0; i < size; i++){
 		mvprintw(urY, urX + i * 4, "  %c", playerChar(playerOne));
 	}
+	attroff(0 | COLOR_PAIR(playerOne));
 	urY++;
 	for(int j = 0; j < size; j++){
 		int Y = urY + 2 * j;
 		int X = urX + 2 * j;
+		attron(0 | COLOR_PAIR(playerTwo));
 		mvprintw(Y + 1, X, "%c", playerChar(playerTwo));
 		mvprintw(Y + 1, X + size * 4 + 4, "%c", playerChar(playerTwo));
+		attroff(0 | COLOR_PAIR(playerTwo));
+		player p;
 		for(int i = 0; i < size; i++){
+			p = feld.getPlayer(i, j);
 			X = X + 4;
 			mvprintw(Y, X - 1, "/ \\");
-			mvprintw(Y + 1, X - 2, "| %c |", playerChar(feld.getPlayer(i, j)));
+			mvprintw(Y + 1, X - 2, "| ");
+			attron(0 | COLOR_PAIR(p));
+			mvprintw(Y + 1, X, "%c", playerChar(p));
+			attroff(0 | COLOR_PAIR(p));
+			mvprintw(Y + 1, X + 2, "|");
 			mvprintw(Y + 2, X - 1, "\\ /");
 		}
 	}
+	attron(0 | COLOR_PAIR(playerOne));
 	for(int i = 0; i < size; i++){
 		mvprintw(urY + size * 2 + 1, urX + size * 2 + i * 4, "   %c", playerChar(playerOne));
 	}
+	attroff(0 | COLOR_PAIR(playerOne));
 }
 
 int giveHeight(feld feld){
@@ -205,6 +217,11 @@ int main(int argc, char* argv[]) {
 	keypad(stdscr, true);
 	atexit(quit);
 	curs_set(0);
+	start_color();
+
+	// player color
+	init_pair(playerOne, COLOR_BLUE, COLOR_BLACK);
+	init_pair(playerTwo, COLOR_RED, COLOR_BLACK);
 
 	/*
 	if (can_change_color()) {
@@ -220,7 +237,11 @@ int main(int argc, char* argv[]) {
 
 	while (winner == empty) {
 		player = playerChar(p);
-		mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 2, "Spieler %c ist am Zug", player);
+		mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 2, "Spieler");
+		attron(0 | COLOR_PAIR(p));
+		mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 10, "%c", player);
+		attroff(0 | COLOR_PAIR(p));
+		mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 12, "ist am Zug");
 		refresh();
 
 		/* wenn der grade setzende spieler
@@ -301,9 +322,13 @@ int main(int argc, char* argv[]) {
 			p = nextTurn(p);
 		}
 	}
-	mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 2, "Spieler %c hat Gewonnen", player);
+	mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 2, "Spieler");
+	attron(0 | COLOR_PAIR(p));
+	mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 10, "%c", player);
+	attroff(0 | COLOR_PAIR(p));
+	mvprintw(giveHeight(f) + uY + 2, giveHeight(f) + uX + 12, "hat Gewonnen");
+	refresh();
 
 	getch();
 	return 0;
 }
-
