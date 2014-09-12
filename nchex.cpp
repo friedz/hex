@@ -30,6 +30,7 @@ char playerChar(player p){
 	}
 }
 
+
 void fmake(pair<int, int> ur, feld feld){
 	int size = feld.getSize();
 	int urY = ur.first - 2;
@@ -51,13 +52,46 @@ void fmake(pair<int, int> ur, feld feld){
 		for(int i = 0; i < size; i++){
 			p = feld.getPlayer(i, j);
 			X = X + 4;
-			mvprintw(Y, X - 1, "/ \\");
+
+			if(feld.getPlayer(i, j - 1) == p) {
+				attron(0 | COLOR_PAIR(p));
+			}
+			mvprintw(Y, X - 1, "/");
+			attroff(0 | COLOR_PAIR(p));
+
+			if(feld.getPlayer(i + 1, j - 1) == p) {
+				attron(0 | COLOR_PAIR(p));
+			}
+			mvprintw(Y, X + 1, "\\");
+			attroff(0 | COLOR_PAIR(p));
+
+			if(feld.getPlayer(i - 1, j) == p) {
+				attron(0 | COLOR_PAIR(p));
+			}
 			mvprintw(Y + 1, X - 2, "| ");
+			attroff(0 | COLOR_PAIR(p));
+
 			attron(0 | COLOR_PAIR(p));
 			mvprintw(Y + 1, X, "%c", playerChar(p));
 			attroff(0 | COLOR_PAIR(p));
+
+			if(feld.getPlayer(i + 1, j) == p) {
+				attron(0 | COLOR_PAIR(p));
+			}
 			mvprintw(Y + 1, X + 2, "|");
-			mvprintw(Y + 2, X - 1, "\\ /");
+			attroff(0 | COLOR_PAIR(p));
+
+			if(feld.getPlayer(i - 1, j + 1) == p) {
+				attron(0 | COLOR_PAIR(p));
+			}
+			mvprintw(Y + 2, X - 1, "\\");
+			attroff(0 | COLOR_PAIR(p));
+
+			if(feld.getPlayer(i, j + 1) == p) {
+				attron(0 | COLOR_PAIR(p));
+			}
+			mvprintw(Y + 2, X + 1, "/");
+			attroff(0 | COLOR_PAIR(p));
 		}
 	}
 	attron(0 | COLOR_PAIR(playerOne));

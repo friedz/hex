@@ -26,7 +26,15 @@ vector<vector<stein> > feld::getField(){
 }
 
 player feld::getPlayer(int x, int y){
-	return this->field[x][y].getStatus();
+	if(x < 0 && y >= this->size || x >= this->size && y < 0) {
+		return empty;
+	} else if(x < 0 || x >= this->size) {
+		return playerTwo;
+	} else if(y < 0 || y >= this->size) {
+		return playerOne;
+	} else {
+		return this->field[x][y].getStatus();
+	}
 }
 		
 player feld::getPlayer(pair<int, int> s){
