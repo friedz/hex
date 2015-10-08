@@ -26,7 +26,7 @@ vector<vector<stein> > feld::getField(){
 }
 
 player feld::getPlayer(int x, int y){
-	if(x < 0 && y >= this->size || x >= this->size && y < 0) {
+	if((x < 0 && y >= this->size) || (x >= this->size && y < 0)) {
 		return empty;
 	} else if(x < 0 || x >= this->size) {
 		return playerTwo;
