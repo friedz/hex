@@ -18,31 +18,31 @@ player notThisOne(player thisOne) {
 }
 
 void wybe::buildGraph(player now) {
-	const int size = (this->game)->getSize();
+	const unsigned long size = (this->game)->getSize();
 	this->graph = vector<vector<node> >(size, vector<node>(size));
 	player enemy = notThisOne(now);
 	srand(time(NULL));
-	for(int x = 0; x < size; x++) {
-		for(int y = 0; y < size; y++) {
+	for(unsigned long x = 0; x < size; x++) {
+		for(unsigned long y = 0; y < size; y++) {
 			this->graph[x][y] = node(x, y);
 
 			// neighbor
-			if(x - 1 >= 0 && this->status(x, y) != enemy) {
+			if(x > 0 && this->status(x, y) != enemy) {
 				this->graph[x][y].neigbor.push_back(pair<int, int>(x - 1, y));
 			}
 			if(x + 1 < size && this->status(x + 1, y) != enemy) {
 				this->graph[x][y].neigbor.push_back(pair<int, int>(x + 1, y));
 			}
-			if(x - 1 >= 0 && y + 1 < size && this->status(x - 1, y + 1) != enemy) {
+			if(x > 0 && y + 1 < size && this->status(x - 1, y + 1) != enemy) {
 				this->graph[x][y].neigbor.push_back(pair<int, int>(x - 1, y + 1));
 			}
-			if(y - 1 >= 0 && this->status(x, y - 1) != enemy) {
+			if(y > 0 && this->status(x, y - 1) != enemy) {
 				this->graph[x][y].neigbor.push_back(pair<int, int>(x, y - 1));
 			}
 			if(y + 1 < size && this->status(x, y + 1) != enemy) {
 				this->graph[x][y].neigbor.push_back(pair<int, int>(x, y + 1));
 			}
-			if(x + 1 < size && y - 1 >= 0 && this->status(x + 1, y - 1) != enemy) {
+			if(x + 1 < size && y > 0 && this->status(x + 1, y - 1) != enemy) {
 				this->graph[x][y].neigbor.push_back(pair<int, int>(x + 1, y - 1));
 			}
 
@@ -72,7 +72,7 @@ vector<pair<int, int> > wybe::dijkstra(player now) {
 	pair<int, int> last (0, 0);
 	priorityNode cuNode;
 	node *nodeNow;
-	for(int i = 0; i < this->graph.size(); i++) {
+	for(unsigned long i = 0; i < this->graph.size(); i++) {
 		switch(now) {
 			case playerOne:
 				nodeNow = &this->graph[i][0];
@@ -99,14 +99,14 @@ vector<pair<int, int> > wybe::dijkstra(player now) {
 		}
 		cuNode.cNode->parent = cuNode.predecessor;
 		cuNode.cNode->checked = true;
-		
+
 		if(cuNode.cNode->checkDestiny(now, this->graph.size())) {
 			last = cuNode.cNode->self;
 			break;
 		}
 		vector<pair<int, int> > neigbors = cuNode.cNode->neigbor;
 		priorityNode nextNeigbor;
-		for(int i = 0; i < neigbors.size(); i++) {
+		for(unsigned long i = 0; i < neigbors.size(); i++) {
 			node *nowNeigbor = &this->graph[neigbors[i].first][neigbors[i].second];
 			if(!nowNeigbor->checked) {
 				nextNeigbor.cNode = nowNeigbor;
@@ -126,7 +126,7 @@ vector<pair<int, int> > wybe::dijkstra(player now) {
 	if(last == pair<int, int>(0, 0)) {
 		return path;
 	}
-		
+
 	// just needs to be something other than 0
 	int significantCoordinate = 5;
 	pair<int, int> parent;
@@ -149,8 +149,8 @@ vector<pair<int, int> > wybe::dijkstra(player now) {
 
 
 pair<int, int> wybe::crossPoint(vector<pair<int, int> > myPath, vector<pair<int, int> > enemyPath) {
-	for(int i = 0; i < myPath.size(); i++) {
-		for(int j = 0; j < enemyPath.size(); j++) {
+	for(unsigned long i = 0; i < myPath.size(); i++) {
+		for(unsigned long j = 0; j < enemyPath.size(); j++) {
 			if(myPath[i] == enemyPath[j]) {
 				return myPath[i];
 			}
